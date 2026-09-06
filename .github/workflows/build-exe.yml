@@ -1,0 +1,30 @@
+name: Build Cumbum Watch.exe
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "cumbum_watch.py"
+      - ".github/workflows/build-exe.yml"
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install psutil colorama pyinstaller
+
+      - name: Build exe
+        run: pyinstaller --onefile --console --name "Cumbum Watch" cumbum_watch.py
+
+      - name: Upload exe artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CumbumWatch-exe
+          path: dist/Cumbum Watch.exe
